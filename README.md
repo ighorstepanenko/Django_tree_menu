@@ -12,11 +12,11 @@
 
 1) скопировать файлы в локальную директорию с помощью команды
 
-  $ git clone https://github.com/ighorstepanenko/Django-tree-menu.git
+  $ git clone https://github.com/ighorstepanenko/Django_tree_menu.git
 
 2) перейти в скопированную директорию и развернуть приложение в Docker-Compose, для этого необходимо выполнить следующие команды:
 
-  $ cd Django-tree-menu/  
+  $ cd Django_tree_menu/  
   $ sudo docker compose up -d
 
 > Если пишет, что данный адрес уже используется, то просмотрите с помощью команды `sudo ss -lptn 'sport = :<PORT>'` какой процесс использует данный адрес и остановите процесс с помощью команды `sudo kill -KILL <PID>' либо измените в файле Docker-compose первый порт с "8000" на любой свободный в команде строке 'ports'
