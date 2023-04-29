@@ -1,0 +1,10 @@
+{% load tree_menu_tags %}
+
+<h3>{{ menu_title }}</h3>
+<ul>
+    {% for menu_item, children in menu_tree %}
+        {% with menu_item=menu_item children=children %}
+            {% include 'menu/menu_item.html' %}
+        {% endwith %}
+    {% endfor %}
+</ul>

@@ -1,0 +1,12 @@
+<li {% if menu_item.url == current_path %}class="active"{% endif %}>
+    <a href="{% url 'menu_item' menu_item.url %}">{{ menu_item.item }}</a>
+    {% if children %}
+        <ul>
+            {% for child_item, child_children in children %}
+                {% with menu_item=child_item children=child_children %}
+                    {% include 'menu/menu_item.html' %}
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>

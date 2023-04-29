@@ -1,32 +1,25 @@
 from django import template
-from django.http import request
-from django.urls import resolve
-from ..models import MenuItem
+
+from menu.models import MenuItem
+from menu.utils import build_menu_tree, get_menu_item_ancestors
 
 register = template.Library()
 
 
-@register.simple_tag
-def draw_menu(menu_name):
-    menu_items = MenuItem.objects.filter(parent__isnull=True, name=menu_name).select_related('parent')
-    current_url = resolve(request.path_info).url_name
+@register.inclusion_tag('menu/menu.html', takes_context=True)
+def draw_menu(context, selected_menu_title):
+    menu_items = MenuItem.objects.filter(menu_title__title=selected_menu_title).select_related('parent')
+    current_path = context['request'].path_info
 
-    def draw_menu_items(menu_items, level=0):
-        output = ''
-        for item in menu_items:
-            is_active = False
-            sub_menu_items = MenuItem.objects.filter(parent=item)
-            if current_url == item.url:
-                is_active = True
+    active_item = None
+    for item in menu_items:
+        if f'/{item.url}/' == current_path:
+            active_item = item
+            break
 
-            output += f'<li class="{"active" if is_active else ""}">' \
-                      f'<a href="{item.url}">{item.name}</a>'
-            if sub_menu_items:
-                output += '<ul>'
-                if is_active or level < 2:
-                    output += draw_menu_items(sub_menu_items, level=level+1)
-                output += '</ul>'
-            output += '</li>'
-        return output
-
-    return draw_menu_items(menu_items)
+    if active_item is not None:
+        ancestors = get_menu_item_ancestors(active_item)
+        menu_tree = build_menu_tree(menu_items, ancestors)
+    else:
+        menu_tree = build_menu_tree(menu_items, menu_items)
+    return {'menu_title': selected_menu_title, 'menu_tree': menu_tree, 'current_path': current_path}

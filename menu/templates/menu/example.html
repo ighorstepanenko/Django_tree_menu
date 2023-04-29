@@ -1,4 +1,13 @@
+{% extends 'menu/base.html' %}
 {% load tree_menu_tags %}
-<ul>
+
+{% block title %}Пример страницы с меню{% endblock %}
+
+{% block header %}
+    <h1>Пример страницы с меню</h1>
+    <p>Здесь будет основное содержимое вашей страницы.</p>
+{% endblock %}
+
+{% block content %}
     {% draw_menu 'main_menu' %}
-</ul>
+{% endblock %}
